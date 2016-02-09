@@ -1,0 +1,80 @@
+#!/bin/bash
+
+#Compilation
+make
+
+################# PARTIE 1 ###################
+# Question 1
+echo "Question 1 ==================="
+./bioseq.native windows 80 40 phage-lambda.fasta
+
+# Question 2
+# nombre de fenêtre = n / s - (n % l)
+
+# Question 3
+echo "Question 3 ==================="
+./bioseq.native  print-fasta-stats test0.fasta
+
+# Question 5
+echo "Question 5 ==================="
+./bioseq.native  print-fasta-stats ebola-t.fasta
+./bioseq.native  print-fasta-stats ebola-z.fasta
+./bioseq.native  print-fasta-stats phage-lambda.fasta
+
+
+################# PARTIE 2 ###################
+
+# Question 6
+echo "Question 6 ==================="
+./bioseq.native  list-kmers 4 test1.fasta
+
+# Question 7
+echo "Question 7 ==================="
+./bioseq.native  common-kmers 4 test2.fasta test1.fasta
+
+# Question 7
+echo "Question 8 ==================="
+./bioseq.native  ratio-common-kmers 4 test2.fasta test1.fasta
+
+# Question 9
+echo "Question 9 ==================="
+./script/compare.sh ebola-z.fasta phage-lambda.fasta
+./script/compare.sh ebola-z.fasta ebola-t.fasta
+# On remarque que lorsqu'on cherche le ratio de k_mer de petite taille présent dans 2 séquence, ce ratio est trés fort quelque soit la proximité des espèce. Cela est normal car il y a une trés forte probabilité de trouvé des k_mers de trés petite taille en commun dans 2 grande chaine.
+# Lorsqu'on cherche des k_mers de taille plus grande, on arrive à des résultats plus cohérent. On remarque que la séquence du phage et d'ebola sont ont trés peux de k_mers en commun alors que les 2 souche d'ebola en ont un peut plus.
+# Il est tout de même surprenant de voir que 2 souches d'un même virus ont un si faible ratio de k_mers de grande taille en commun.
+
+################# PARTIE 3 ###################
+
+# Question 10
+echo "Question 10 ==================="
+echo "double mutation de test1 "
+./bioseq.native  random-mutations 2 test1.fasta
+echo "double mutation de test1 "
+./bioseq.native  random-mutations 2 test1.fasta
+echo "double mutation de test1 "
+./bioseq.native  random-mutations 2 test1.fasta
+echo "double mutation de test1 "
+./bioseq.native  random-mutations 2 test1.fasta
+
+# Question 11
+echo "Question 11 ==================="
+./script/create_compare.sh ebola-z.fasta
+# On remarque que lorsque le virus mute peux (entre 0 et 100 mutations) Les deux espèces restent assez proches.
+# Entre 100 et 1000 mutations, les 2 espèces commencencent ont beacoup moins de ressemblance. Le nombre de k_mers commun entre la souche d'ebola de base et celle muté est similaire au nombre de k_mers commun entre la souche de t et la souche z.
+# Entre 1000 et 10 000 mutations, les espèces n'ont plus grand chose en commun. Les ratio sont alors semblables aux ratio de k_mers commun entre un virus ebola et un virus phage.
+#Si une mutation est conservé par génération, on peut donc conclure que le processus d'évolution est trés long. (minimum 1000 génération pour obtenir une espèce différente)
+
+
+################# PARTIE 5 ###################
+
+# Question 12
+echo "Question 12 ==================="
+./bioseq.native list-spaced-kmers "##-##" "test1.fasta"
+
+# Question 13
+echo "Question 13 ==================="
+echo "k_mers commun entre test1.fasta et test2.fasta avec la graine ##-#"
+./bioseq.native  common-spaced-kmers "##-#" test1.fasta test2.fasta
+echo "ratio de k_mers commun entre test1.fasta et test2.fasta avec la graine ##-#"
+./bioseq.native  ratio-common-spaced-kmers "##-#" test1.fasta test2.fasta
