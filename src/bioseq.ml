@@ -9,11 +9,11 @@ let window length shift file =
     print_window_list window_list
   in List.iter p seq_window_list
 
-let mapper_windows_kmers length_win shift_win length_kmer step_kmer file1 file2 =
+let mapper_windows_k_mers length_win shift_win length_kmer step_kmer file1 file2 =
   let read = Fasta.of_file file1
   in let k_mers_read = K_mer.list length_kmer read
      and genome = Fasta.of_file file2 in
-     let window_list = Fasta.extract_windows length_win shift_win genome in
+     let (_, window_list) = List.hd (Window.extract_from_fasta length_win shift_win genome) in
      let p window =
        let k_mers_window = K_mer.list_of_window length_kmer window in
        let common_k_mers = K_mer.common k_mers_window k_mers_read in
@@ -36,7 +36,7 @@ let main =
      let length_win = int_of_string(Sys.argv.(2))
      and shift_win = int_of_string(Sys.argv.(3))
      and length_kmer = int_of_string(Sys.argv.(4))
-     and step_kmer = int_of_string(Sys.argv.(5))
+     and step_kmer = float_of_string(Sys.argv.(5))
      and file1 = Sys.argv.(6)
      and file2 = Sys.argv.(7)
      in mapper_windows_k_mers length_win shift_win length_kmer step_kmer file1 file2
